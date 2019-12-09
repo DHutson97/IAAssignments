@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,22 +30,20 @@ public class SingleController {
 	}
 	//
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Model> TO_UpperCase(@RequestHeader (value="TO_UPPERCASE") String k, @RequestBody String model) {
+	public ResponseEntity<Model> TO_UpperCase(@RequestHeader (value="TO_UPPERCASE") Boolean k, @RequestBody String model) {
 		Model m = null;
 			try {
 				m = new ObjectMapper().readValue(model, Model.class);
 			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
 			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
 			}
-			if(k.equalsIgnoreCase("true")) {
+			if(k==true) {
 				
 				m.setfName(m.getfName().toUpperCase());
 				m.setTitle(m.getTitle().toUpperCase());
-			}else if(k.equalsIgnoreCase("false")) {
+			}else if(k==false) {
 				
 				
 			}else {
@@ -59,20 +58,14 @@ public class SingleController {
 		
 
 	}
-	@RequestMapping(produces = "application/json",method=RequestMethod.PUT)
-	public ResponseEntity<Model> update(@RequestBody String model) {
+	@PutMapping
+	public ResponseEntity<Model> update(@RequestBody String model) throws JsonMappingException, JsonProcessingException {
 	 HttpHeaders responseHeaders= new HttpHeaders();
 	 responseHeaders.set("X_TIME OF EVENT",LocalDateTime.now().toString());
 	 Model m = null;
-	try {
+	
 		m = new ObjectMapper().readValue(model, Model.class);
-	} catch (JsonMappingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (JsonProcessingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	
 		return ResponseEntity.ok().headers(responseHeaders).body(m);
 	}
 	
@@ -84,7 +77,7 @@ public class SingleController {
 		Model m =new Model();
 		
 		try {
-			Integer.parseInt(input);
+			Float.parseFloat(input);
 			m.setMessage(input+" deleted sucessfully");
 			return (ResponseEntity<Model>) ResponseEntity.ok().body(m);
 		}catch (NumberFormatException e) {
