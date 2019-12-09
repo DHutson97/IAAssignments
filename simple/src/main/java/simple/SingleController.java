@@ -31,6 +31,14 @@ public class SingleController {
 	//
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Model> TO_UpperCase(@RequestHeader (value="TO_UPPERCASE") Boolean k, @RequestBody String model) {
+		if (k==null){
+			Model m2= new Model();
+			m2.setMessage("To_UPPERCASE cannot be null");
+			
+			return ResponseEntity.badRequest().body(m2);
+			
+		}
+		
 		Model m = null;
 			try {
 				m = new ObjectMapper().readValue(model, Model.class);
